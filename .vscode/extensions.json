@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "charliermarsh.ruff",
+    "CucumberOpen.cucumber-official",
+    "eamodio.gitlens",
+    "janisdd.vscode-edit-csv",
+    "ms-python.black-formatter",
+    "ms-python.python",
+    "ms-python.debugpy",
+    "ms-python.vscode-pylance",
+    "tamasfe.even-better-toml",
+    "vasubasraj.flashpost"
+  ]
+}

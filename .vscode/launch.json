@@ -1,0 +1,104 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "debug",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": false
+    },
+    {
+      "name": "behave: debug tag",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "behave",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "--tags",
+        "debug",
+        "--format",
+        "pretty",
+        "--no-capture",
+        "--show-timings",
+        "--verbose",
+        "features/specs/"
+      ],
+      "justMyCode": false
+    },
+    {
+      "name": "behavex: debug tag",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "behavex",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "--config",
+        "behavex.cfg",
+        "--parallel-scheme",
+        "${input:parallel_scheme}",
+        "--parallel-processes",
+        "${input:parallel_processes}",
+        "--tags",
+        "${input:tags}",
+        "--show-progress-bar",
+        "features/specs/"
+      ],
+      "justMyCode": false,
+    },
+    {
+      "name": "behavex | allure: debug tag",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "behavex",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "--config",
+        "behavex.cfg",
+        "--parallel-scheme",
+        "${input:parallel_scheme}",
+        "--parallel-processes",
+        "${input:parallel_processes}",
+        "--tags",
+        "${input:tags}",
+        "--formatter",
+        "behavex.outputs.formatters.allure_behavex_formatter:AllureBehaveXFormatter",
+        "--formatter-outdir",
+        "allure",
+        "--show-progress-bar",
+        "features/specs/"
+      ],
+      "justMyCode": false,
+      "postDebugTask": "allure:generate"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "tags",
+      "type": "promptString",
+      "default": "debug",
+      "description": "Tags to run"
+    },
+    {
+      "id": "parallel_scheme",
+      "type": "pickString",
+      "default": "",
+      "description": "Select a parallel scheme",
+      "options": ["scenario", "feature"]
+    },
+    {
+      "id": "parallel_processes",
+      "type": "promptString",
+      "default": "1",
+      "description": "Number of workers to run in parallel"
+    }
+  ]
+}
