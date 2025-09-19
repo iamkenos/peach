@@ -1,0 +1,7 @@
+.env
+.venv
+.pytest_cache
+*.egg-info
+Pipfile
+
+test/output/
