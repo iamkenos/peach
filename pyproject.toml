@@ -1,0 +1,44 @@
+[project]
+name = "peach"
+version = "0.0.0"
+description = ""
+authors = [{ name = "iamkenos", email = "alexis.matunog@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "backoff~=2.2.1",
+    "behavex~=4.6.0",
+    "pandas~=2.2.2",
+    "playwright~=1.40.0",
+    "python-dotenv~=0.19.2",
+    "python-slugify[unidecode]~=8.0.4",
+]
+[dependency-groups]
+dev = [
+    "ruff~=0.13.2",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "peach"
+packages = [{ include = "peach" }]
+
+[tool.ruff]
+line-length = 150
+target-version = "py312"
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/steps/__init__.py" = ["E402","F403"]
+"**/gherkin/__init__.py" = ["E402","F403"]
+"**/steps/**/*.py" = ["F811"]
+"**/gherkin/**/*.py" = ["F811"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
