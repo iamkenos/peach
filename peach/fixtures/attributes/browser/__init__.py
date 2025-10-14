@@ -1,4 +1,3 @@
-import os
 import uuid
 
 from playwright.sync_api import sync_playwright
