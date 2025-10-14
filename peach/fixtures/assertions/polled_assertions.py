@@ -30,11 +30,16 @@ class PolledAssertion(Assertion):
 class PolledAssertions(BaseAssertions):
     def __init__(self, timeout: int, **kwargs):
         super().__init__(**kwargs)
-        self.timeout = timeout or DEFAULT_TIMEOUT
+        self.__timeout: int = timeout or DEFAULT_TIMEOUT
+        self.__action: Callable[[], Any] = None
+
+    def set_action(self, callback: Callable[[], Any]):
+        self.__action = callback
+        return self
 
     def poll(self, max_tries=None, timeout=None):
         tries = SimpleNamespace(**dict(count=0, elapsed=0, has_givenup=False))
-        timeout = timeout or self.timeout
+        timeout = timeout or self.__timeout
 
         def giveup(_):
             if max_tries and tries.count >= max_tries:
@@ -62,7 +67,15 @@ class PolledAssertions(BaseAssertions):
             on_giveup=on_giveup,
         )
         def poll():
-            return self.evaluate(clear_assertions=False, polling_status=f"Timed out after {tries.count} attempts over {int(tries.elapsed)} seconds.")
+            try:
+                if self.__action:
+                    self.__action()
+            except Exception:
+                pass
+            return self.evaluate(
+                clear_assertions=False,
+                polling_status=f"Timed out after {tries.count} attempts over {int(tries.elapsed)} seconds.",
+            )
 
         # turn off soft assertions so errors are always thrown on failure and backoff is fired accordingly
         # this is so soft assertions are properly retried and dont resolve immediately if they fail

@@ -3,6 +3,7 @@
   "files.exclude": {
     ".allure": true,
     ".ruff_cache": true,
+    ".venv": true,
     "**/__pycache__/": true
   },
   "cucumber.glue": ["**/steps/**/*.py"],
