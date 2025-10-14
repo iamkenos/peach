@@ -7,7 +7,7 @@ Write Python BDD tests with [BehaveX](https://github.com/hrcorval/behavex) and [
 
 ## Requirements
 
-- Python ~= 3.12
+- Python ~= 3.12.10
 - NodeJS ~= 22.20
 - [Poetry](https://python-poetry.org/docs/#installing-with-pipx)
 
