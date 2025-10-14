@@ -13,6 +13,7 @@ dependencies = [
     "python-dotenv (>=1.1.1,<2.0.0)",
     "python-slugify[unidecode] (>=8.0.4,<9.0.0)",
     "inflection (>=0.5.1,<0.6.0)",
+    "click (>=8.3.0,<9.0.0)",
 ]
 [dependency-groups]
 dev = [
@@ -26,6 +27,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "peach"
 packages = [{ include = "peach" }]
+
+[tool.poetry.scripts]
+peach = "peach.__main__:cli"
 
 [tool.pyright]
 reportMissingImports = "none"

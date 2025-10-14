@@ -110,6 +110,21 @@ filelock = {version = "*", markers = "python_version >= \"3.8\""}
 pillow = "*"
 
 [[package]]
+name = "click"
+version = "8.3.0"
+description = "Composable command line interface toolkit"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "click-8.3.0-py3-none-any.whl", hash = "sha256:9b9f285302c6e3064f4330c05f05b81945b2a39544279343e6e7c5f27a9baddc"},
+    {file = "click-8.3.0.tar.gz", hash = "sha256:e7b8232224eba16f4ebe410c25ced9f7875cb5f3263ffc93cc3e8da705e229c4"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -981,4 +996,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<=3.13"
-content-hash = "ddc4adc9c2d9cdc369cc7abf0425afd53572f4f291761877e9d3911943830e76"
+content-hash = "2a4490a795332063b098c2c0d0e9d81e751bb0802d6f875fd58f0a93d3637bdb"
