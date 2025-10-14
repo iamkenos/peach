@@ -7,6 +7,7 @@ from playwright.sync_api._generated import BrowserContext, Playwright
 from peach.fixtures import Fixture
 from peach.fixtures.attributes.env import DEFAULT_TIMEOUT
 from peach.plugins.page.types import Page
+from peach.utilities.formatters.datetime_formatter import seconds_to_ms
 
 
 class Browser(Fixture):
@@ -25,10 +26,21 @@ class Browser(Fixture):
             self.launcher.stop()
 
     def create(self) -> BrowserContext:
-        proxy, headless, timeout = self._ctx.env.browser_proxy, self._ctx.env.browser_is_headless, self._ctx.env.browser_timeout
-        context = self.launcher.chromium.launch(headless=headless).new_context(ignore_https_errors=True, proxy=proxy)
-        context.set_default_timeout(timeout * 1000)
-        context.set_default_navigation_timeout(max(timeout, DEFAULT_TIMEOUT) * 1000)  # navigation timeout shouldn't be less than the default
+        proxy = self._ctx.env.browser_proxy
+        headless = self._ctx.env.browser_is_headless
+        timeout = self._ctx.env.browser_timeout
+
+        # fmt: off
+        context = self.launcher.chromium \
+            .launch(headless=headless) \
+            .new_context(
+                ignore_https_errors=True,
+                proxy=proxy,
+                record_video_dir=self._ctx.evidence_path)
+        # fmt: on
+        # navigation timeout shouldn't be less than the default
+        context.set_default_navigation_timeout(seconds_to_ms(max(timeout, DEFAULT_TIMEOUT)))
+        context.set_default_timeout(seconds_to_ms(timeout))
         return context
 
     def navigate(self, url: str):
@@ -48,7 +60,7 @@ class Browser(Fixture):
 
             try:
                 # doesnt work with the default behavex html formatter anymore, library issue?
-                self._ctx.bhximgs_attached_images_folder = os.path.dirname(self._ctx.evidence_path)
+                self._ctx.bhximgs_attached_images_folder = self._ctx.scenario_log_dir()
                 image_attachments.attach_image_file(self._ctx, full_path, filename)
             except Exception:
                 pass
