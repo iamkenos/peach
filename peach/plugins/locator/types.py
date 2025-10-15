@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from locator import Locator as _Locator
+    from peach.plugins.locator import Locator as _Locator
 
 if TYPE_CHECKING:
     Locator = _Locator

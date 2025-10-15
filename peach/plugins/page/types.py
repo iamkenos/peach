@@ -3,7 +3,7 @@
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from page import Page as _Page
+    from peach.plugins.page import Page as _Page
 
 if TYPE_CHECKING:
     Page = _Page

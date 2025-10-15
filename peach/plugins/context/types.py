@@ -10,7 +10,7 @@ class Attr:
 
 
 if TYPE_CHECKING:
-    from context import Context as _Context
+    from peach.plugins.context import Context as _Context
 
 if TYPE_CHECKING:
     Context = _Context
