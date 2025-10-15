@@ -31,11 +31,12 @@ class Browser(Fixture):
 
         # fmt: off
         context = self.launcher.chromium \
-            .launch(headless=headless) \
+            .launch(headless=headless, args=["--start-maximized"]) \
             .new_context(
                 ignore_https_errors=True,
                 proxy=proxy,
-                record_video_dir=self._ctx.evidence_path)
+                record_video_dir=self._ctx.evidence_path,
+                no_viewport=True)
         # fmt: on
         # navigation timeout shouldn't be less than the default
         context.set_default_navigation_timeout(seconds_to_ms(max(timeout, DEFAULT_TIMEOUT)))
