@@ -22,7 +22,7 @@
       "cwd": "${workspaceFolder}",
       "args": [
         "--tags",
-        "debug",
+        "${input:tags}",
         "--format",
         "pretty",
         "--no-capture",
@@ -72,7 +72,7 @@
         "--formatter",
         "behavex.outputs.formatters.allure_behavex_formatter:AllureBehaveXFormatter",
         "--formatter-outdir",
-        "allure",
+        "report",
         "--show-progress-bar",
         "features/specs/"
       ],

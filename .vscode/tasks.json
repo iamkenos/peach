@@ -9,10 +9,10 @@
         "allure",
         "generate",
         "--single-file",
-        "output/allure/",
+        "output/report/",
         "-c",
         "-o",
-        "output/allure/html/"
+        "output/report/html/"
       ]
     }
   ]

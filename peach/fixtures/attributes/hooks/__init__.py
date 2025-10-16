@@ -15,7 +15,7 @@ class Hooks(Fixture):
         self._ctx.browser.start()
 
     def after_all(self):
-        environment_properties_filepath = str(Path(self._ctx.output_dir, "allure", "environment.properties").absolute())
+        environment_properties_filepath = str(Path(self._ctx.output_dir, "report", "environment.properties").absolute())
 
         self._ctx.env.export_resolved_as_file(environment_properties_filepath)
         self._ctx.browser.stop()
