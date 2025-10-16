@@ -2,19 +2,20 @@ from dataclasses import dataclass
 from types import SimpleNamespace
 from typing import Any, Type
 
-from peach.utilities.formatters import json_formatter, string_formatter
+from peach.utilities.object import format_obj
+from peach.utilities.string import format_str
 
 from ...fixtures import Fixture
 
 
 def beautify_value(value: Any):
-    return string_formatter.indent(f"\n{json_formatter.beautify(value)}") if isinstance(value, (list, dict)) else value
+    return format_str.indent(f"\n{format_obj.beautify(value)}") if isinstance(value, (list, dict)) else value
 
 
 def beautify_kwargs(kwargs: dict):
     args: list = []
     for key, value in kwargs.items():
-        prop = string_formatter.to_sentence_case(key)
+        prop = format_str.to_sentence_case(key)
         value = beautify_value(value)
         args.append(f"\n{prop}: {value}")
     result = "".join(args) if args else ""
@@ -50,7 +51,7 @@ Assertion #{self.index + 1}: {self.name}
 
 Result: {"Success" if self.assertion_result else "Failed"}{actual_str}{expected_str}{message_str}{beautify_kwargs(args)}
 """.strip()
-        self.assertion_message = string_formatter.indent(f"\n{self.assertion_message}")
+        self.assertion_message = format_str.indent(f"\n{self.assertion_message}")
         return self
 
 
@@ -106,10 +107,10 @@ class BaseAssertions(Fixture):
         is_success = failed_count == 0
 
         if not is_success:
-            display_name = string_formatter.humanize(string_formatter.underscore(self.__name)).lower()
+            display_name = format_str.humanize(format_str.underscore(self.__name)).lower()
             header = f"\nFailed on {failed_count}/{total_count} {display_name}.{beautify_kwargs(kwargs)}\n"
             body = "\n  --------------------------------".join(map(lambda result: result.assertion_message, results))
-            message = string_formatter.ansi_red(f"{header}{body}")
+            message = format_str.ansi_red(f"{header}{body}")
 
         self.result = Result(results=results, is_success=is_success, message=message)
         try:

@@ -6,7 +6,7 @@ from filelock import FileLock
 from playwright._impl._api_structures import ProxySettings
 
 from peach.fixtures import Fixture
-from peach.utilities.inspectors.class_inspector import get_own_attributes
+from peach.utilities.object import inspect_obj
 
 DEFAULT = "UNDEFINED"
 DEFAULT_TIMEOUT = 30
@@ -50,7 +50,7 @@ class Env(Fixture):
             self.browser_timeout = DEFAULT_TIMEOUT
 
     def get_resolved_as_dict(self) -> Dict[str, Any]:
-        attrs = get_own_attributes(Env())
+        attrs = inspect_obj.get_own_attributes(self)
 
         kvps = {}
         for attr in attrs:

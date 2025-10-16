@@ -6,7 +6,7 @@ from playwright.sync_api._generated import BrowserContext, Playwright
 from peach.fixtures import Fixture
 from peach.fixtures.attributes.env import DEFAULT_TIMEOUT
 from peach.plugins.page.types import Page
-from peach.utilities.formatters.datetime_formatter import seconds_to_ms
+from peach.utilities.datetime import format_dt
 
 
 class Browser(Fixture):
@@ -39,8 +39,8 @@ class Browser(Fixture):
                 no_viewport=True)
         # fmt: on
         # navigation timeout shouldn't be less than the default
-        context.set_default_navigation_timeout(seconds_to_ms(max(timeout, DEFAULT_TIMEOUT)))
-        context.set_default_timeout(seconds_to_ms(timeout))
+        context.set_default_navigation_timeout(format_dt.seconds_to_ms(max(timeout, DEFAULT_TIMEOUT)))
+        context.set_default_timeout(format_dt.seconds_to_ms(timeout))
         return context
 
     def navigate(self, url: str):
