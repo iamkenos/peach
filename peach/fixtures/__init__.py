@@ -1,7 +1,7 @@
 from peach.plugins.context.types import Context
 
 
-class Fixture(Context):
+class Fixture:
     def __init__(self):
         self._ctx: Context
         """
