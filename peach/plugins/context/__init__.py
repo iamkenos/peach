@@ -6,7 +6,6 @@ from peach.fixtures import Fixture
 from peach.fixtures.attributes.browser import Browser
 from peach.fixtures.attributes.env import Env
 from peach.fixtures.attributes.files import Files
-from peach.fixtures.attributes.hooks import Hooks
 from peach.plugins.context.commands import patch as patch_context_commands
 from peach.plugins.context.types import Attr
 from peach.plugins.locator.commands import patch as patch_locator_commands
@@ -42,9 +41,6 @@ class Context(BaseContext):
     files: Files
     """ Interface for input and output files. """
 
-    hooks: Hooks
-    """ Collection of functions to be called on `environment.py` hooks. """
-
     parameters: SimpleNamespace
     """ A simple namespace to store parameters that can be shared across steps within the same scenario."""
 
@@ -68,5 +64,4 @@ def extend(ctx: Context) -> None:
     ctx.env = Env()
     ctx.browser = Browser()
     ctx.files = Files()
-    ctx.hooks = Hooks()
     ctx.parameters = SimpleNamespace()

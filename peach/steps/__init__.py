@@ -2,7 +2,7 @@
 
 from behave import step, then
 
-from peach.fixtures.page import PageObject
+from peach.fixtures.pages import PageObject
 from peach.plugins.context import Context
 from peach.steps.expressions.expressions_steps import *
 from peach.steps.parameter_types.parameter_types_steps import *

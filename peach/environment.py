@@ -1,31 +1,44 @@
 from behave.model import Feature, Scenario, Step
 
+from peach.fixtures.hooks.after_all import AfterAll
+from peach.fixtures.hooks.after_feature import AfterFeature
+from peach.fixtures.hooks.after_scenario import AfterScenario
+from peach.fixtures.hooks.after_step import AfterStep
+from peach.fixtures.hooks.before_all import BeforeAll
+from peach.fixtures.hooks.before_feature import BeforeFeature
+from peach.fixtures.hooks.before_scenario import BeforeScenario
+from peach.fixtures.hooks.before_step import BeforeStep
 from peach.plugins.context import Context, extend
 
 
 def before_all(ctx: Context):
     extend(ctx)
-    ctx.hooks.before_all()
+    BeforeAll().run()
 
 
 def before_feature(ctx: Context, feature: Feature):
-    pass
+    BeforeFeature(feature).run()
 
 
 def before_scenario(ctx: Context, scenario: Scenario):
-    ctx.hooks.set_scenario_identifier_hash(scenario)
-    ctx.hooks.suffix_scenario_name_with_example_id(scenario)
+    BeforeScenario(scenario).run()
 
 
-def after_scenario(ctx: Context, scenario: Scenario):
-    ctx.hooks.close_browser_page()
-    ctx.hooks.delete_scenario_browser_recording_on_sucess(scenario)
-    ctx.hooks.delete_scenario_log_file_if_empty()
+def before_step(ctx: Context, step: Step):
+    BeforeStep(step).run()
 
 
 def after_step(ctx: Context, step: Step):
-    ctx.hooks.attach_evidences_on_error(step)
+    AfterStep(step).run()
+
+
+def after_scenario(ctx: Context, scenario: Scenario):
+    AfterScenario(scenario).run()
+
+
+def after_feature(ctx: Context, feature: Feature):
+    AfterFeature(feature).run()
 
 
 def after_all(ctx: Context):
-    ctx.hooks.after_all()
+    AfterAll().run()

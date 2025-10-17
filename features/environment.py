@@ -19,12 +19,20 @@ def before_scenario(ctx: Context, scenario: Scenario):
     environment.before_scenario(ctx, scenario)
 
 
-def after_scenario(ctx: Context, scenario: Scenario):
-    environment.after_scenario(ctx, scenario)
+def before_step(ctx: Context, step: Step):
+    environment.before_step(ctx, step)
 
 
 def after_step(ctx: Context, step: Step):
     environment.after_step(ctx, step)
+
+
+def after_scenario(ctx: Context, scenario: Scenario):
+    environment.after_scenario(ctx, scenario)
+
+
+def after_feature(ctx: Context, feature: Feature):
+    environment.after_feature(ctx, feature)
 
 
 def after_all(ctx: Context):
