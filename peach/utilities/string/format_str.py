@@ -1,6 +1,7 @@
 # pyright: reportWildcardImportFromLibrary=false
 import textwrap
 
+from behave._types import parse_bool
 from inflection import *  # noqa: F403
 
 
@@ -12,6 +13,13 @@ class Colors:
 def to_sentence_case(s: str):
     try:
         return s.capitalize().replace("_", " ")
+    except Exception:
+        return s
+
+
+def to_maybe_bool(s: str):
+    try:
+        return parse_bool(s)
     except Exception:
         return s
 

@@ -7,6 +7,7 @@ from playwright._impl._api_structures import ProxySettings
 
 from peach.fixtures import Fixture
 from peach.utilities.object import inspect_obj
+from peach.utilities.string import format_str
 
 DEFAULT = "UNDEFINED"
 DEFAULT_TIMEOUT = 30
@@ -34,7 +35,7 @@ class Env(Fixture):
         self.no_proxy = env_no_proxy
 
     def __set_api_vars(self):
-        self.api_request_should_verify_ssl = os.getenv("REQUEST_SHOULD_VERIFY_SSL", DEFAULT).lower() != "false"
+        self.api_request_verify_tls = format_str.to_maybe_bool(os.getenv("REQUEST_VERIFY_TLS", str(True)))
         try:
             self.api_request_timeout = int(eval(str(os.getenv("REQUEST_TIMEOUT", DEFAULT_TIMEOUT))))
         except Exception:
