@@ -1,6 +1,4 @@
-from behave.model import Feature
-
-from peach.fixtures.constants.tags import Tags
+from behave.model import Feature, Scenario, ScenarioOutline
 
 from .. import Hook
 
@@ -10,10 +8,18 @@ class BeforeFeature(Hook):
         super().__init__()
         self.feature = feature
 
-    def __prefix_name_with_brand(self) -> None:
-        """Prefixes the feature name with the resolved BRAND environment variable."""
-        if Tags.NO_BRAND not in self.feature.tags and bool(self._ctx.env.brand):
-            self.feature.name = f"[{self._ctx.env.brand}] {self.feature.name}"
+    def __prefix_scenarios_with_idx(self) -> None:
+        def do_prefix(idx: int, scenario: Scenario):
+            scenario.name = f"S{idx + 1:02d}│{scenario.name}"
+
+        for idx, s in enumerate(self.feature.scenarios):
+            if isinstance(s, ScenarioOutline):
+                for scenario in s.scenarios:
+                    do_prefix(idx, scenario)
+            elif isinstance(s, Scenario):
+                do_prefix(idx, s)
+            else:
+                pass  # do nothing, unsupported type
 
     def run(self):
-        self.__prefix_name_with_brand()
+        self.__prefix_scenarios_with_idx()
