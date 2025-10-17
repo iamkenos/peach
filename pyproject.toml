@@ -50,3 +50,5 @@ quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
 
+[tool.behave]
+scenario_outline_annotation_schema = "{name} @ {row.id}"
