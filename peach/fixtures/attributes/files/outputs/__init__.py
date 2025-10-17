@@ -21,8 +21,8 @@ class OutputFiles(IOFiles):
     def __init__(self):
         super().__init__()
 
-        self.output_dir = self.to_absolute_path(self.root_dir, self._ctx._config.junit_directory)
-        """The `behave` output directory, either coming from default or passed from the config file."""
+        self.output_dir = self.to_absolute_path(self.root_dir, "output")
+        """The `behave` output directory."""
 
         self.outputs_dir = self.to_absolute_path(self.output_dir, "outputs")
         """The `behavex` report directory, typically used by the default `behavex` HTML formatter."""
