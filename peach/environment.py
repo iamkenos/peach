@@ -13,10 +13,13 @@ def before_feature(ctx: Context, feature: Feature):
 
 
 def before_scenario(ctx: Context, scenario: Scenario):
-    ctx.hooks.prefix_scenario_name_with_example_id(scenario)
+    ctx.hooks.set_scenario_identifier_hash(scenario)
+    ctx.hooks.suffix_scenario_name_with_example_id(scenario)
 
 
 def after_scenario(ctx: Context, scenario: Scenario):
+    ctx.hooks.close_browser_page()
+    ctx.hooks.delete_scenario_browser_recording_on_sucess(scenario)
     ctx.hooks.delete_scenario_log_file_if_empty()
 
 

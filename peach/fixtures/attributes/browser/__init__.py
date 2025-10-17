@@ -1,5 +1,7 @@
+import os
 import uuid
 
+from playwright._impl._api_structures import ViewportSize
 from playwright.sync_api import sync_playwright
 from playwright.sync_api._generated import BrowserContext, Playwright
 
@@ -19,8 +21,6 @@ class Browser(Fixture):
         self.launcher = sync_playwright().start()
 
     def stop(self) -> None:
-        if self.page and self.page.context:
-            self.page.context.close()
         if self.launcher:
             self.launcher.stop()
 
@@ -30,13 +30,15 @@ class Browser(Fixture):
         timeout = self._ctx.env.browser_timeout
 
         # fmt: off
+        viewport: ViewportSize = { "width": 2560, "height": 1440, }
         context = self.launcher.chromium \
-            .launch(headless=headless, args=["--start-maximized"]) \
+            .launch(headless=headless) \
             .new_context(
                 ignore_https_errors=True,
                 proxy=proxy,
-                record_video_dir=self._ctx.evidence_path,
-                no_viewport=True)
+                record_video_dir=self._ctx.files.output.scenario_evidence_dir,
+                record_video_size=viewport,
+                viewport=viewport)
         # fmt: on
         # navigation timeout shouldn't be less than the default
         context.set_default_navigation_timeout(format_dt.seconds_to_ms(max(timeout, DEFAULT_TIMEOUT)))
@@ -48,6 +50,13 @@ class Browser(Fixture):
         self.page = self.create().new_page()
         self.page.goto(url)
 
+    def close(self):
+        if self.page and self.page.context:
+            self.page.context.close()
+
+    def get_video_attachment_file(self):
+        return next((f for f in self._ctx.files.output.scenario_evidence_filepaths if "webm" in os.path.splitext(f)[1]), "")
+
     def attach_screenshot(self, name=None) -> None:
         try:
             from behavex_images import image_attachments
@@ -55,12 +64,14 @@ class Browser(Fixture):
             image_attachments = None
 
         if self.page and image_attachments:
+            filepath = self._ctx.files.output.scenario_evidence_dir
             filename = f"{name or uuid.uuid4().hex}.png"
-            full_path = self._ctx.attach_evidence(filename, lambda full_path: self.page.screenshot(path=full_path, full_page=True))
+            screenshot_file = self._ctx.files.to_absolute_path(filepath, filename)
 
+            self.page.screenshot(path=screenshot_file, full_page=True)
             try:
                 # doesnt work with the default behavex html formatter anymore, library issue?
-                self._ctx.bhximgs_attached_images_folder = self._ctx.scenario_log_dir()
-                image_attachments.attach_image_file(self._ctx, full_path, filename)
+                self._ctx.bhximgs_attached_images_folder = self._ctx.files.output.scenario_log_dir
+                image_attachments.attach_image_file(self._ctx, screenshot_file, filename)
             except Exception:
                 pass
