@@ -24,6 +24,10 @@ class IOFiles(Fixture):
         directory = os.path.dirname(filepath)
         os.makedirs(directory, exist_ok=True)
 
+    def write(self, filepath: str, content: str):
+        with open(filepath, "w") as f:
+            f.write(content)
+
     def try_remove(self, filepath: str):
         if os.path.exists(filepath):
             try:

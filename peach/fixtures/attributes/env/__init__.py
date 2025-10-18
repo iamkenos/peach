@@ -60,16 +60,16 @@ class Env(Fixture):
                 kvps[attr.upper()] = value
         return kvps
 
-    def export_resolved_as_file(self, full_path: str, should_mask_sensitive=True):
-        lock_file = full_path + ".lock"
+    def export_resolved_as_file(self, filepath: str, should_mask_sensitive=True):
+        lock_file = filepath + ".lock"
 
-        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         lock = FileLock(lock_file, timeout=0)
 
         try:
             with lock:
-                if not os.path.exists(full_path):
-                    with open(full_path, "w") as f:
+                if not os.path.exists(filepath):
+                    with open(filepath, "w") as f:
                         for key, value in self.get_resolved_as_dict().items():
                             if should_mask_sensitive:
                                 sensitive_keywords = ["key", "token", "secret", "password", "passphrase"]

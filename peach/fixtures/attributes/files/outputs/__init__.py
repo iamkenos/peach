@@ -30,23 +30,15 @@ class OutputFiles(IOFiles):
         self.report_dir = self.to_absolute_path(self.output_dir, "report")
         self.report_environment_filepath = self.to_absolute_path(self.report_dir, "environment.properties")
 
-        self.__scenario_evidence_dir = None
-
     @property
     def scenario_evidence_dir(self):
         """The unique path for each scenario where evidences are stored."""
 
-        if self.__scenario_evidence_dir:
-            return self.__scenario_evidence_dir
-
         if self._ctx.is_using_behavex:
-            scenario_evidence_dir = self.to_absolute_path(self._ctx.evidence_path)
+            return self.to_absolute_path(self._ctx.evidence_path)
         else:
             # support for the `behave` runner.
-            scenario_evidence_dir = self.to_absolute_path(self.report_dir, self._ctx.scenario.identifier_hash, "evidence")
-
-        self.__scenario_evidence_dir = scenario_evidence_dir
-        return scenario_evidence_dir
+            return self.to_absolute_path(self.report_dir, self._ctx.scenario.identifier_hash, "evidence")
 
     @property
     def scenario_evidence_filepaths(self):
@@ -60,3 +52,13 @@ class OutputFiles(IOFiles):
     @property
     def scenario_log_filepath(self):
         return self.to_absolute_path(self.scenario_log_dir, "scenario.log")
+
+    def create_evidence_file(self, filename: str = "", data: str = ""):
+        filepath = self.to_absolute_path(self.scenario_evidence_dir, filename)
+        self.write(filepath, data)
+
+    def try_create_evidence_file(self, filename: str = "", data: str = ""):
+        try:
+            self.create_evidence_file(filename, data)
+        except Exception:
+            pass

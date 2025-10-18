@@ -15,7 +15,7 @@ def beautify_value(value: Any):
 def beautify_kwargs(kwargs: dict):
     args: list = []
     for key, value in kwargs.items():
-        prop = format_str.to_sentence_case(key)
+        prop = format_str.to_sentence(key)
         value = beautify_value(value)
         args.append(f"\n{prop}: {value}")
     result = "".join(args) if args else ""
@@ -23,15 +23,14 @@ def beautify_kwargs(kwargs: dict):
 
 
 class Assertion(object):
-    def __init__(self, name: str, **kwargs):
+    def __init__(self, name: str, *, is_not=False, message="", **kwargs):
         super().__init__()
-        is_not, message = "is_not", "message"
-        self.message: str = kwargs.get(message, "")
-        self.is_not: bool = kwargs.get(is_not, False)
+        self.message: str = message
+        self.is_not: bool = is_not
         self.is_success: bool = False
         self.index: int = None
-        self.name = f"expect.{name}(...)"
-        self.__args: SimpleNamespace = SimpleNamespace(**{key: value for key, value in kwargs.items() if key not in [is_not, message]})
+        self.__name = name
+        self.__args: SimpleNamespace = SimpleNamespace(**kwargs)
 
     @property
     def args(self) -> SimpleNamespace:
@@ -45,9 +44,9 @@ class Assertion(object):
         actual_str = f"\nActual: {beautify_value(self.actual)}" if has_actual_value else ""
         message_str = f"\nMessage: {self.message}" if bool(self.message) else ""
 
-        self.assertion_result = not self.is_success if self.is_not else self.is_success
+        self.assertion_result = self.is_success ^ self.is_not  # flip if not
         self.assertion_message = f"""
-Assertion #{self.index + 1}: {self.name}
+Assertion #{self.index + 1}: expect.{format_str.to_snake(self.__name)}(...)
 
 Result: {"Success" if self.assertion_result else "Failed"}{actual_str}{expected_str}{message_str}{beautify_kwargs(args)}
 """.strip()
@@ -107,8 +106,7 @@ class BaseAssertions(Fixture):
         is_success = failed_count == 0
 
         if not is_success:
-            display_name = format_str.humanize(format_str.underscore(self.__name)).lower()
-            header = f"\nFailed on {failed_count}/{total_count} {display_name}.{beautify_kwargs(kwargs)}\n"
+            header = f"\nFailed on {failed_count}/{total_count} {format_str.to_lower(self.__name)}.{beautify_kwargs(kwargs)}\n"
             body = "\n  --------------------------------".join(map(lambda result: result.assertion_message, results))
             message = format_str.ansi_red(f"{header}{body}")
 

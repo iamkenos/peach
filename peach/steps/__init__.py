@@ -1,8 +1,11 @@
 # pyright: reportCallIssue=false, reportRedeclaration=false, reportAssignmentType=false
 
+from typing import Literal
+
 from behave import step, then
 
 from peach.fixtures.pages import PageObject
+from peach.fixtures.services import Endpoints, WebService
 from peach.plugins.context import Context
 from peach.steps.expressions.expressions_steps import *
 from peach.steps.parameter_types.parameter_types_steps import *
@@ -19,6 +22,24 @@ class PlaywrightHomePage(PageObject):
         self.nav_item = lambda label: self.nav().locator(f"//a[text()='{label}']")
 
 
+class PetStoreEndpoints(Endpoints):
+    def __init__(self, version: str):
+        super().__init__()
+        self.pet = f"{version}/pet"
+        self.pet_find_by_status = lambda status: f"{self.pet}/findByStatus?status={status}"
+
+
+class PetStoreService(WebService):
+    def __init__(self):
+        super().__init__()
+        self.url = "https://petstore.swagger.io"
+        self.version = "v2"
+        self.endpoints = PetStoreEndpoints(self.version)
+
+    def get_pets_by_status(self, status: Literal["available", "pending", "sold"]):
+        return self.request.get(self.endpoints.pet_find_by_status(status))
+
+
 @step("a condition is met")
 def step_impl(ctx: Context):
     pg = PlaywrightHomePage()
@@ -27,7 +48,8 @@ def step_impl(ctx: Context):
 
 @step("an event is triggered")
 def step_impl(ctx: Context):
-    pass
+    ws = PetStoreService()
+    ws.attach().get_pets_by_status("available")
 
 
 @then("a condition is satisfied")

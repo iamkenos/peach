@@ -27,7 +27,7 @@ Feature: Getting Started
       | TC-S1-002 | B     |
       | TC-S1-003 | C     |
 
-    @init
+    @init @debug
     Examples:
       | data_id   | value |
       | TC-S1-004 | D     |
