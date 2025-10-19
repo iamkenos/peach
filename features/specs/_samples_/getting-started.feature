@@ -83,3 +83,7 @@ Feature: Getting Started
       | data_id   | direction |
       | TC-S1-001 | up        |
       | TC-S1-002 | down      |
+
+  @init @poll
+  Scenario: Poll a webservice response
+    Then a different condition is not satisfied

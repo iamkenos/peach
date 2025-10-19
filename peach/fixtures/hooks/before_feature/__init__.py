@@ -10,7 +10,7 @@ class BeforeFeature(Hook):
 
     def __prefix_scenarios_with_idx(self) -> None:
         def do_prefix(idx: int, scenario: Scenario):
-            scenario.name = f"S{idx + 1:02d}│{scenario.name}"
+            scenario.name = f"S{idx + 1:02d} │ {scenario.name}"
 
         for idx, s in enumerate(self.feature.scenarios):
             if isinstance(s, ScenarioOutline):

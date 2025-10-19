@@ -1,43 +1,16 @@
-# pyright: reportIncompatibleVariableOverride=false
-from typing import Callable
-
 import backoff
 
 from peach.fixtures.attributes.env import DEFAULT_TIMEOUT
 
-from .base_assertions import Any, Assertion, BaseAssertions, SimpleNamespace
-
-
-class PolledAssertion(Assertion):
-    def __init__(self, name: str, **kwargs):
-        super().__init__(name, **kwargs)
-        self.actual_predicate: Callable[[], Any]
-        self.is_success_predicate: Callable[[], bool]
-
-    @property
-    def actual(self) -> Any:
-        return self.actual_predicate()
-
-    @property
-    def is_success(self) -> bool:
-        return self.is_success_predicate()
-
-    @is_success.setter
-    def is_success(self, value):
-        self.is_success_predicate = value
+from ..base_assertions import BaseAssertions, SimpleNamespace
 
 
 class PolledAssertions(BaseAssertions):
-    def __init__(self, timeout: int, **kwargs):
+    def __init__(self, *, timeout: int = DEFAULT_TIMEOUT, **kwargs):
         super().__init__(**kwargs)
-        self.__timeout: int = timeout or DEFAULT_TIMEOUT
-        self.__action: Callable[[], Any] = None
+        self.__timeout: int = timeout
 
-    def set_action(self, callback: Callable[[], Any]):
-        self.__action = callback
-        return self
-
-    def poll(self, max_tries=None, timeout=None):
+    def poll(self, max_tries: int | None = None, timeout: int | None = None):
         tries = SimpleNamespace(**dict(count=0, elapsed=0, has_givenup=False))
         timeout = timeout or self.__timeout
 
@@ -63,17 +36,12 @@ class PolledAssertions(BaseAssertions):
             giveup_log_level=0,
             giveup=giveup,
             on_backoff=on_backoff,
-            on_success=lambda _: self.clear_assertions(),
+            on_success=lambda _: self.reset(),
             on_giveup=on_giveup,
         )
         def poll():
-            try:
-                if self.__action:
-                    self.__action()
-            except Exception:
-                pass
             return self.evaluate(
-                clear_assertions=False,
+                reset_state=False,
                 polling_status=f"Timed out after {tries.count} attempts over {int(tries.elapsed)} seconds.",
             )
 
@@ -87,7 +55,7 @@ class PolledAssertions(BaseAssertions):
             if tries.has_givenup and should_return_soft_assertion_result:
                 return self.soft().evaluate()
             else:
-                self.clear_assertions()
+                self.reset()
                 raise E
         finally:
             # reset soft assertions back it back to its original state

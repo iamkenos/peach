@@ -87,6 +87,21 @@ def to_maybe_bool(s: str):
         return s
 
 
+def is_list_like(s: str):
+    s = str(s).strip()
+    return s.startswith("[") and s.endswith("]")
+
+
+def to_list(list_like: str):
+    list_like = str(list_like)
+    if is_list_like(list_like):
+        items = list_like.strip("[]").replace("'", "").strip()
+        items = [item.strip() for item in items.split(",")]
+    else:
+        items = [list_like]
+    return list(filter(lambda i: bool(i), items))
+
+
 def indent(s: str, indent=2):
     try:
         return textwrap.indent(s, " " * indent)

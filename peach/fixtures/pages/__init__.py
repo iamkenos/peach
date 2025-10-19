@@ -1,4 +1,4 @@
-from peach.fixtures.assertions.page_assertions import PageAssertions
+from peach.fixtures.assertions.polled_assertions.page_assertions import PageAssertions
 
 from ...fixtures import Fixture
 

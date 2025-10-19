@@ -1,5 +1,6 @@
-from .base_assertions import BaseAssertions
+from .dataframe_assertions import DataFrameAssertions
+from .file_assertions import FileAssertions
 
 
-class Assertions(BaseAssertions):
+class Assertions(DataFrameAssertions, FileAssertions):
     pass

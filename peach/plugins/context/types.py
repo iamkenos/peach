@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any
 class Attr:
     _ctx = "_ctx"
     ctx = "ctx"
-    context = "context"
 
 
 if TYPE_CHECKING:

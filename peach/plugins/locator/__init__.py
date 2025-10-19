@@ -4,7 +4,7 @@ from typing import Literal
 
 from playwright.sync_api._generated import Locator as BaseLocator
 
-from peach.fixtures.assertions.locator_assertions import LocatorAssertions
+from peach.fixtures.assertions.polled_assertions.locator_assertions import LocatorAssertions
 from peach.plugins.page.types import Page
 
 

@@ -1,6 +1,8 @@
 import glob
 from pathlib import Path
 
+from peach.utilities.datetime import pendulum
+
 from ..io_files import IOFiles
 
 
@@ -54,7 +56,7 @@ class OutputFiles(IOFiles):
         return self.to_absolute_path(self.scenario_log_dir, "scenario.log")
 
     def create_evidence_file(self, filename: str = "", data: str = ""):
-        filepath = self.to_absolute_path(self.scenario_evidence_dir, filename)
+        filepath = self.to_absolute_path(self.scenario_evidence_dir, f"{pendulum.now().int_timestamp}-{filename}")
         self.write(filepath, data)
 
     def try_create_evidence_file(self, filename: str = "", data: str = ""):

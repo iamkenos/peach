@@ -31,4 +31,8 @@ def step_impl(ctx: Context, direction: Direction):
 @then("the actor's last known position is {direction}")
 def step_impl(ctx: Context, direction: Direction):
     expect = Assertions()
-    expect.equals(actual=ctx.parameters.last_direction, expected=direction.name, message="Verify the last known position of the actor.").evaluate()
+    expect.equals(
+        expected=direction.name,
+        actual=ctx.parameters.last_direction,
+        message="Verify the last known position of the actor.",
+    ).evaluate()

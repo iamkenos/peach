@@ -24,4 +24,7 @@ def step_impl(ctx: Context, count: int):
 @step("a total of {int} actions are performed")
 def step_impl(ctx: Context, count: int):
     expect = Assertions()
-    expect.equals(actual=ctx.parameters.count_of_actions, expected=count).evaluate()
+    expect.equals(
+        expected=count,
+        actual=ctx.parameters.count_of_actions,
+    ).evaluate()
